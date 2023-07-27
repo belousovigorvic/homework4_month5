@@ -1,49 +1,42 @@
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { setNickName, setName, setSurName, setPatronymic, setGender, setAge } from "../../store/userCreateReducer";
+import { updateUser } from "../../store/userCreateReducer";
 
 const UserCreate = () => {
-  const [formData, setFormData] = useState({
+  const [userData, setUserData] = useState({
     nickName: '',
     name: '',
     surName: '',
-    patronymic: '',
     gender: 'Мужской',
     age: 0
   });
 
   useEffect(() => {
-    console.log(formData);
-  }, [formData]);
+    console.log(userData);
+  }, [userData]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(setNickName(formData.nickName));
-    dispatch(setName(formData.name));
-    dispatch(setSurName(formData.surName));
-    dispatch(setPatronymic(formData.patronymic));
-    dispatch(setGender(formData.gender));
-    dispatch(setAge(formData.age));
+    dispatch(updateUser(userData)); // Отправляем весь объект formData целиком
     navigate('/user-list');
   };
 
   return (
-    <>
+    <div style={{maxWidth: '700px', margin: '0 auto'}}>
       <h1 style={{ textAlign: "center" }}>Создание Пользователя</h1>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: 'column', height: '25vh', justifyContent: 'space-around' }}>
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: 'column', height: '30vh', justifyContent: 'space-around' }}>
         <input onChange={handleChange} type="text" name="nickName" placeholder="Псевдоним" />
         <input onChange={handleChange} type="text" name="name" placeholder="Имя" />
         <input onChange={handleChange} type="text" name="surName" placeholder="Фамилия" />
-        <input onChange={handleChange} type="text" name="patronymic" placeholder="Отчество" />
         <label htmlFor="gender">Пол</label>
         <select onChange={handleChange} name="gender" id="gender">
           <option value="Мужской">Мужской</option>
@@ -52,8 +45,8 @@ const UserCreate = () => {
         <input onChange={handleChange} type="number" name="age" placeholder="Возраст" />
         <button>Отправить</button>
       </form>
-    </>
+    </div>
   );
-};
+}
 
 export default UserCreate;
